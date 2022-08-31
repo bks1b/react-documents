@@ -1,0 +1,32 @@
+.tabs {
+    width: 100%;
+    display: flex;
+}
+
+.tabs > div {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+}
+
+.tabs > .selectedTab {
+    background-color: #aaaaaa;
+}
+
+.tabs > :not(.selectedTab):hover {
+    background-color: var(--hover-color);
+}
+
+.tabContent {
+    padding: var(--padding);
+    overflow: auto;
+    width: inherit;
+    height: calc(100% - 43px);
+    box-sizing: border-box;
+}
+
+pre {
+    width: inherit;
+    overflow: auto;
+    margin: 0px;
+}

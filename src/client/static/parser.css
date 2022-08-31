@@ -1,0 +1,26 @@
+.inlineMath {
+    display: inline-block;
+}
+
+.inlineMath > span {
+    margin: 0px;
+}
+
+.arraycolsep + .arraycolsep {
+    width: 0px !important;
+}
+
+.parsedHeader {
+    margin-top: 0px;
+    margin-bottom: 15px;
+    font-weight: 400;
+}
+
+.parsedTable {
+    border-collapse: collapse;
+}
+
+.parsedTable td {
+    border: 1px solid black;
+    padding: 5px;
+}
