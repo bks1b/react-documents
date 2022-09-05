@@ -8,8 +8,8 @@ const alignment: Record<string, 'left' | 'right' | 'center'> = {
     c: 'center',
 };
 
-export const Table = ({ text, args, textOptions }: { text: string[]; args: Args; textOptions: TextOptions; }) => {
-    const rows = text.map(x => x.split(/(?<=^|[^\\])\s*@\s*/).map(x => x.split('\\br').map((x, i) => <Text key={i} text={x.replace(/\\@/g, '@')} {...textOptions} table extended={str => {
+export const Table = ({ text, args, textOptions }: { text: string; args: Args; textOptions: TextOptions; }) => {
+    const rows = text.split('\n').map(x => x.split(/(?<=^|[^\\])\s*@\s*/).map(x => x.split('\\br').map((x, i) => <Text key={i} text={x.replace(/\\@/g, '@')} {...textOptions} table extended={str => {
         const emoji = emojis.find(x => str.startsWith(`[${x[0]}]`));
         if (emoji) return [emoji[1], emoji[0].length + 2];
         return textOptions.extended?.(str);

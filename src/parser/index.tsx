@@ -10,10 +10,10 @@ const getTruthCombinations = (n: number): number[][] => n > 1 ? getTruthCombinat
 export const Parser = <T extends Elements>({ text, fallbacks, elements: extElements, textOptions }: ParserOptions<T>) => {
     const elements: Elements = {
         table: { render: (x, args) => <Table text={x} args={args} textOptions={textOptions || {}}/> },
-        text: { render: x => <>{x.map((x, i) => <Text key={i} text={x} {...textOptions}/>)}</> },
+        text: { render: x => <>{x.split('\n').map((x, i) => <Text key={i} text={x} {...textOptions}/>)}</> },
         script: {
             render: x => {
-                const res = eval(x.join('\n'));
+                const res = eval(x);
                 if (typeof res !== 'string') throw 'String expected as eval result.';
                 return <Parser text={res} {...{ fallbacks, textOptions }} elements={extElements}/>;
             },
@@ -22,7 +22,7 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
         truthTable: {
             render: (x, args) => {
                 const vars = args.vars.split(',');
-                const ops = x.filter(x => x).map(x => {
+                const ops = x.split('\n').filter(x => x).map(x => {
                     const a = x.split('@');
                     if (a.length !== 2) throw 'Operator name and function expected.';
                     return a;
@@ -34,15 +34,15 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
                         ...a,
                         ...ops.map(x => +eval(`${a.map((v, i) => `const ${vars[i]} = ${v}`).join(';')};${x[1]}`)),
                     ].join('@')),
-                ]} args={{ cols: 'c'.repeat(vars.length + ops.length) }} textOptions={textOptions || {}}/>;
+                ].join('\n')} args={{ cols: 'c'.repeat(vars.length + ops.length) }} textOptions={textOptions || {}}/>;
             },
         },
-        math: { render: x => <AsciiMath text={x.join('\n')}/> },
+        math: { render: x => <AsciiMath text={x}/> },
         ...extElements || {},
     };
     const parseUntil = (line: string, { excludeStart = false, closingTag = false } = {}) => {
         for (let j = i; j < lines.length + +!closingTag; j++) {
-            if (j === lines.length || lines[j] === line) return lines.slice(i + +!!excludeStart, i = j);
+            if (j === lines.length || lines[j] === line) return lines.slice(i + +!!excludeStart, i = j).join('\n');
         }
         throw 'Closing tag expected.';
     };

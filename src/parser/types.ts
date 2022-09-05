@@ -2,7 +2,7 @@ export type Args = Record<string, string>;
 export type Bools = Record<string, boolean>;
 
 export type ParserElement = {
-    render: (x: string[], args: Args, bools: Bools) => JSX.Element;
+    render: (x: string, args: Args, bools: Bools) => JSX.Element;
     closingTag?: boolean;
 };
 export type Elements = Record<string, ParserElement>;

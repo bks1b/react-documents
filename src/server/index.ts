@@ -33,7 +33,7 @@ export const getRouter = (config: Config) => {
                 ${
                     config.excludeMath
                         ? ''
-                        : '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="/asciimath.js"></script>'
+                        : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="${rootPath}/asciimath.js"></script>`
                 }
                 ${config.head || ''}
             </head>
