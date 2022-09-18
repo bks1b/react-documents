@@ -61,8 +61,8 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
         .replace(/Int/g, '\\mathcal{I}')
         .replace(/Der/g, '\\mathcal{D}')
         .replace(/eps([^i]|$)/g, 'varepsilon$1')
-        .replace(/(?<=^|\/)d([a-z])\^([a-z0-9])/gi, '(d $1^$2)')
-        .replace(/(?<=^|[/\s])d(vec[a-z]|[a-z])/gi, '{:d $1:}')
+        .replace(/(?<=^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '(d $1^$2)')
+        .replace(/(?<=^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '{:d $1:}')
         .replace(/([^\s]):=/g, '$1 :='),
 )
     .replace(/(\{o\})?\{i\}(\{i\})?\\int(\{s\})?(_.+?)?/g, (_, closed, third, surface, sub) => `\\${closed ? 'o' : ''}${'i'.repeat(third ? 3 : 2)}nt${sub ? `${surface || closed ? '' : '\\limits'}${sub}` : ''}`)
