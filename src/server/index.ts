@@ -15,8 +15,8 @@ export const getRouter = (config: Config) => {
         .then(d => d.text())
         .then(d => d
             .replace('//some greek symbols', `
-                { input: "sgn", tag: "mo", output: "sgn", tex: "text{sgn}", ttype: UNARY, func: true },
-                { input: "=<",  tag: "mo", output: "=<", tex: "le", ttype: CONST },
+                ${['sgn', 'deg'].map(x => `{ input: "${x}", tag: "mo", output: "${x}", tex: "text{${x}}", ttype: UNARY, func: true },`).join('')}
+                { input: "=<", tag: "mo", output: "=<", tex: "le", ttype: CONST },
             `)
             .replace('"harr"', '"<->"')
             .replace(/(?<={input:"=>",.+?tex:")Rightarrow/, 'implies')
