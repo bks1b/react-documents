@@ -41,7 +41,7 @@ export const Triangle = (props: { angle: number; fill?: boolean; }) => {
 export const FolderArrow = (props: { angle: number; }) => baseFolder((w, y) => baseArrow(8, y, w, 5, 4, props.angle));
 
 export const Arrow = (props: { angle: number; }) => {
-    const w = 20;0;
+    const w = 20;
     const tipH = 5;
     return <svg className='icon' width={w + 2} height={2 * tipH + 2}>{baseArrow(0, tipH, w, 7, tipH, props.angle)}</svg>;
 };
