@@ -1,9 +1,9 @@
 import { join } from 'path';
 import { Configuration, DefinePlugin, RuleSetRule } from 'webpack';
 
-export const webpackConfig = (entry: string, extended?: { rules?: RuleSetRule[]; entries?: Record<string, string>; }): Configuration[] => [{
+export const webpackConfig = (entry: string, extended?: { rules?: RuleSetRule[]; }): Configuration[] => [{
     mode: 'none',
-    entry: { app: entry, ...extended?.entries || {} },
+    entry: { app: entry },
     target: 'web',
     resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     module: {

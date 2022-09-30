@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Documents } from '../../src/client';
-import { Parser, Text } from '../../src/Parser';
+import { Parser, Text } from '../../src/parser';
 
 const Renderer = (props: { name: string; text: string; }) => {
     const [tab, setTab] = useState(0);

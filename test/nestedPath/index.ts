@@ -14,7 +14,9 @@ app.use(getRouter({
         name: 'fs_test',
         rootName: 'Root',
     },
-    rootPath: ['docs'],
-    head: '<style>.renderedContainer { overflow: auto; }</style>',
-    parser: true,
+    rootPath: '/docs',
+    html: {
+        head: '<style>.renderedContainer { overflow: auto; }</style>',
+        parser: true,
+    },
 }));

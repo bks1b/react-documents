@@ -1,7 +1,6 @@
 import { join } from 'path';
 import express, { Router } from 'express';
 import fetch from 'node-fetch';
-import { stripIndent } from 'common-tags';
 import api from './routes/api';
 import dashboard from './routes/dashboard';
 import Database, { DatabaseConfig } from './Database';
@@ -10,7 +9,6 @@ const moduleDir = __dirname.split(/[/\\]/).slice(0, -3);
 
 export const getRouter = (config: Config) => {
     const db = new Database(config.database);
-    const rootPath = config.rootPath ? '/' + config.rootPath.join('/') : '';
     const asciiMath = !config.excludeMath && fetch('https://raw.githubusercontent.com/asciimath/asciimathml/master/asciimath-based/ASCIIMathTeXImg.js')
         .then(d => d.text())
         .then(d => d
@@ -24,27 +22,7 @@ export const getRouter = (config: Config) => {
             .replace(/(?<={input:"<=",.+?tex:")le/, 'impliedby')
             .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff'),
         );
-    const html = stripIndent`
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" href="${rootPath}/baseStyle.css">
-                ${config.parser ? `<link rel="stylesheet" href="${rootPath}/parser.css">` : ''}
-                ${
-                    config.excludeMath
-                        ? ''
-                        : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="${rootPath}/asciimath.js"></script>`
-                }
-                ${config.head || ''}
-            </head>
-            <body>
-                <div id="root"></div>
-                <script src="${rootPath}/app.js"></script>
-            </body>
-        </html>
-    `;
-    return Router().use(rootPath,
+    return Router().use(config.rootPath || '',
         Router()
             .use(express.json())
             .use(express.static(join(process.cwd(), 'build')))
@@ -55,16 +33,41 @@ export const getRouter = (config: Config) => {
             }))
             .use('/api', api(db))
             .use('/api/dashboard', dashboard(db, config.dashboard.password))
-            .use((_, res) => res.send(html)),
+            .use((_, res, next) => config.html ? res.send(getHTML({ rootPath: config.rootPath, excludeMath: config.excludeMath, ...config.html })) : next()),
     );
 };
 
+export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="${config.rootPath || ''}/baseStyle.css">
+        ${config.parser ? `<link rel="stylesheet" href="${config.rootPath || ''}/parser.css">` : ''}
+        ${
+            config.excludeMath
+                ? ''
+                : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="${config.rootPath || ''}/asciimath.js"></script>`
+        }
+        ${config.head || ''}
+    </head>
+    <body>
+        <div id="root"></div>
+        <script src="${config.rootPath || ''}/app.js"></script>
+    </body>
+</html>`;
+
+export type BaseConfig = {
+    excludeMath?: boolean;
+    rootPath?: string;
+};
+export type HTMLConfig = {
+    parser?: boolean;
+    head?: string;
+    html?: HTMLConfig;
+};
 export type Config = {
     database: DatabaseConfig;
     dashboard: { password: string; };
-    head?: string;
-    rootPath?: string[];
     modulePath?: string;
-    excludeMath?: boolean;
-    parser?: boolean;
-};
+    html?: HTMLConfig;
+} & BaseConfig;
