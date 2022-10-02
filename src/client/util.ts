@@ -3,7 +3,7 @@ import { BaseFile, Dir, Doc } from '../types';
 import { MainContextType } from './types';
 
 export const MainContext = createContext<MainContextType | null>(null);
-export const ConfigContext = createContext<{ title: string; rootPath: string; render: (name: string, text: string) => ReactNode; } | null>(null);
+export const ConfigContext = createContext<{ title: string; rootPath: string; heightOffset?: string; render: (name: string, text: string) => ReactNode; } | null>(null);
 
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 

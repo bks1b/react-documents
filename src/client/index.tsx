@@ -114,6 +114,7 @@ export const Documents = (config: Config) => {
     }}>
         <ConfigContext.Provider value={{
             title: config.title,
+            heightOffset: config.heightOffset,
             rootPath,
             render: (name: string, text: string) => <div className='renderedContainer'>
                 <div className={`rendered${config.padding ? ' padding' : ''}`}>

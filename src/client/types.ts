@@ -46,6 +46,7 @@ export type Config = {
     rootPath?: string[];
     padding?: boolean;
     Renderer: FC<Record<'name' | 'text', string>>;
+    heightOffset?: string;
 };
 
 export type RequestFunction<U extends any[] = []> = <T>(path: string, body?: any, ...a: U) => Promise<T & { error?: string; }>;

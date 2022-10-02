@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import { isMobile, MainContext } from '../util';
+import { ConfigContext, isMobile, MainContext } from '../util';
 import Folder from './Folder';
 
 export default (props: {
@@ -9,6 +9,7 @@ export default (props: {
     sidebarChildren?: ReactNode;
 }) => {
     const ctx = useContext(MainContext)!;
+    const { heightOffset } = useContext(ConfigContext)!;
     const [open, setOpen] = useState(false);
     useEffect(() => setOpen(props.dashboard || !props.children || !isMobile), [props.dashboard, !!props.children]);
     return <>
@@ -19,7 +20,7 @@ export default (props: {
                 <div></div>
             </div>
         }
-        <div className='split'>
+        <div className='split' style={{ height: heightOffset ? `calc(100% - ${heightOffset})` : '100%' }}>
             <div className={`padding overflow ${props.children ? 'sidebar' : 'content'}${open ? '' : ' hidden'}`}>
                 {props.sidebarChildren ? <div className='sidebarChildren'>{props.sidebarChildren}</div> : <></>}
                 <div className='folderContainer'>
