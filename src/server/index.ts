@@ -24,7 +24,7 @@ export const getRouter = (config: Config) => {
         );
     return Router().use(config.rootPath || '',
         Router()
-            .use(express.json())
+            .use(express.json({ limit: '1tb' }))
             .use(express.static(join(process.cwd(), 'build')))
             .use(express.static(join(...config.modulePath ? [config.modulePath] : moduleDir, 'src', 'client', 'static')))
             .get('/asciimath.js', (_, res) => asciiMath && asciiMath.then(x => {
