@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Documents } from '../../src/client';
-import { Parser, Text } from '../../src/parser';
+import { AsciiMath, Parser, Text } from '../../src/parser';
 
 const Renderer = (props: { name: string; text: string; }) => {
     const [tab, setTab] = useState(0);
@@ -13,7 +13,12 @@ const Renderer = (props: { name: string; text: string; }) => {
         </div>
         <div className='tabContent'>
             <div style={{ justifyContent: 'center' }} className='h2'>{props.name} (tab {tab + 1}/2)</div>
-            <Parser text={props.text} elements={{
+            <Parser text={props.text} textOptions={{
+                extended: (x: string) => {
+                    const math = x.match(/^@(.+?)@/);
+                    if (math) return [<AsciiMath inline text={math[1]}/>, math[0].length];
+                },
+            }} elements={{
                 test: { render: () => { throw 'Test error'; } },
                 test2: { render: x => <>{x.map(x => <Text text={x}/>)}</> },
             }}/>

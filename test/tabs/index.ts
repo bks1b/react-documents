@@ -17,5 +17,8 @@ app
             name: 'fs_test',
             rootName: 'Root',
         },
-        html: { head: '<link rel="stylesheet" href="/style.css">' },
+        html: {
+            head: '<link rel="stylesheet" href="/style.css">',
+            parser: true,
+        },
     }));

@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "tsc || exit 0",
     "lint": "eslint src test --fix",
-    "test": "tsc && node dist/test"
+    "test": "tsc & node dist/test"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.2",
