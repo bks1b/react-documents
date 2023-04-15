@@ -43,7 +43,7 @@ export default class Folder extends BaseFile<Dir, { root?: boolean; }> {
                         </div>
                     }
                 </div>
-                <div className={`folder${this.props.data.open ? '' : ' hidden'}`}>{children}</div>
+                <div onClick={() => {}} className={`folder${this.props.data.open ? '' : ' hidden'}`}>{children}</div>
             </>
             : children;
     }
