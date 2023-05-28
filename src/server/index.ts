@@ -61,8 +61,8 @@ export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
     </body>
 </html>`;
 
-const getSW = (config: Config) => `const CACHE_NAME = '${config.database.name}';
-const INITIAL_CACHE = ${JSON.stringify([
+const getSW = (config: Config) => `self.addEventListener('install', e => e.waitUntil(caches.open('${config.database.name}').then(c => Promise.all([
+    c.addAll(${JSON.stringify([
     ...[
         '',
         'api/files',
@@ -71,15 +71,14 @@ const INITIAL_CACHE = ${JSON.stringify([
         ...config.excludeMath ? [] : ['asciimath.js'],
         ...config.html?.parser ? ['parser.css'] : [],
     ].map(x => `${config.rootPath || ''}/${x}`),
-    ...config.excludeMath ? [] : [
-        'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css',
-        ...['AMS-Regular', 'Caligraphic-Bold', 'Caligraphic-Regular', 'Fraktur-Bold', 'Fraktur-Regular', 'Main-Bold', 'Main-BoldItalic', 'Main-Italic', 'Main-Regular', 'Math-BoldItalic', 'Math-Italic', 'SansSerif-Bold', 'SansSerif-Italic', 'SansSerif-Regular', 'Script-Regular', 'Size1-Regular', 'Size2-Regular', 'Size3-Regular', 'Size4-Regular', 'Typewriter-Regular'].map(x => `https://cdn.jsdelivr.net/npm/katex/dist/fonts/KaTeX_${x}.woff2`),
-    ],
     ...config.serviceWorker?.initialCache || [],
-])};
-
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(INITIAL_CACHE))));
-self.addEventListener('fetch', e => e.respondWith(caches.open(CACHE_NAME).then(async c => {
+])}),
+    ...${JSON.stringify(config.excludeMath ? [] : [
+    'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css',
+    ...['AMS-Regular', 'Caligraphic-Bold', 'Caligraphic-Regular', 'Fraktur-Bold', 'Fraktur-Regular', 'Main-Bold', 'Main-BoldItalic', 'Main-Italic', 'Main-Regular', 'Math-BoldItalic', 'Math-Italic', 'SansSerif-Bold', 'SansSerif-Italic', 'SansSerif-Regular', 'Script-Regular', 'Size1-Regular', 'Size2-Regular', 'Size3-Regular', 'Size4-Regular', 'Typewriter-Regular'].map(x => `https://cdn.jsdelivr.net/npm/katex/dist/fonts/KaTeX_${x}.woff2`),
+])}.map(x => fetch(x).then(d => c.put(x, d))),
+]))));
+self.addEventListener('fetch', e => e.respondWith(caches.open('${config.database.name}').then(async c => {
     try {
         const res = await fetch(e.request);
         if (e.request.method === 'GET') c.put(e.request, res.clone());
