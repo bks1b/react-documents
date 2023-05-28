@@ -31,9 +31,13 @@ export const getRouter = (config: Config) => {
                 res.setHeader('content-type', 'application/javascript; charset=utf-8');
                 res.send(x);
             }))
+            .get('/sw.js', (_, res) => {
+                res.setHeader('content-type', 'application/javascript; charset=utf-8');
+                res.send(getSW(config));
+            })
             .use('/api', api(db))
             .use('/api/dashboard', dashboard(db, config.dashboard.password))
-            .use((_, res, next) => config.html ? res.send(getHTML({ rootPath: config.rootPath, excludeMath: config.excludeMath, ...config.html })) : next()),
+            .use((_, res, next) => config.html ? res.send(getHTML({ ...config, ...config.html })) : next()),
     );
 };
 
@@ -48,6 +52,7 @@ export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
                 ? ''
                 : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="${config.rootPath || ''}/asciimath.js"></script>`
         }
+        ${config.serviceWorker ? `<script>navigator.serviceWorker.register('${config.rootPath || ''}/sw.js');</script>` : ''}
         ${config.head || ''}
     </head>
     <body>
@@ -56,9 +61,38 @@ export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
     </body>
 </html>`;
 
+const getSW = (config: Config) => `const CACHE_NAME = '${config.database.name}';
+const INITIAL_CACHE = ${JSON.stringify([
+    ...[
+        '',
+        'api/files',
+        'app.js',
+        'baseStyle.css',
+        ...config.excludeMath ? [] : ['asciimath.js'],
+        ...config.html?.parser ? ['parser.css'] : [],
+    ].map(x => `${config.rootPath || ''}/${x}`),
+    ...config.excludeMath ? [] : [
+        'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css',
+        ...['AMS-Regular', 'Caligraphic-Bold', 'Caligraphic-Regular', 'Fraktur-Bold', 'Fraktur-Regular', 'Main-Bold', 'Main-BoldItalic', 'Main-Italic', 'Main-Regular', 'Math-BoldItalic', 'Math-Italic', 'SansSerif-Bold', 'SansSerif-Italic', 'SansSerif-Regular', 'Script-Regular', 'Size1-Regular', 'Size2-Regular', 'Size3-Regular', 'Size4-Regular', 'Typewriter-Regular'].map(x => `https://cdn.jsdelivr.net/npm/katex/dist/fonts/KaTeX_${x}.woff2`),
+    ],
+    ...config.serviceWorker?.initialCache || [],
+])};
+
+self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(INITIAL_CACHE))));
+self.addEventListener('fetch', e => e.respondWith(caches.open(CACHE_NAME).then(async c => {
+    try {
+        const res = await fetch(e.request);
+        if (e.request.method === 'GET') c.put(e.request, res.clone());
+        return res;
+    } catch {
+        return (await c.match(e.request)) || c.match('${config.rootPath || ''}/');
+    }
+})));`;
+
 export type BaseConfig = {
     excludeMath?: boolean;
     rootPath?: string;
+    serviceWorker?: { initialCache?: string[]; };
 };
 export type HTMLConfig = {
     parser?: boolean;

@@ -19,4 +19,5 @@ app.use(getRouter({
         head: '<style>.renderedContainer { overflow: auto; }</style>',
         parser: true,
     },
+    serviceWorker: {},
 }));

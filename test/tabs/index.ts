@@ -21,4 +21,5 @@ app
             head: '<link rel="stylesheet" href="/style.css">',
             parser: true,
         },
+        serviceWorker: { initialCache: ['/style.css'] },
     }));
