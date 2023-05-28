@@ -2,7 +2,7 @@ import { Router } from 'express';
 import Database from '../Database';
 
 export default (db: Database, pass: string) => Router()
-    .use((req, _, next) => req.headers.authorization === pass && next())
+    .use((req, _, next) => req.query.auth === pass && next())
     .get('/auth', (_, res) => res.json({}))
     .post('/files/get', async (req, res) => res.json(await db.getFiles(req.body.branch)))
     .post('/files/set', (req, res) => db

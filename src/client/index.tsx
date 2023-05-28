@@ -14,12 +14,12 @@ const INCORRECT_PASS_TIMEOUT = 2000;
 export const Documents = (config: Config) => {
     const getPath = () => decodeURIComponent(window.location.pathname).split('/').slice((config.rootPath?.length || 0) + 1).filter(x => x);
     const getPassword = () => localStorage.getItem('password');
-    const request: RequestFunction<[Record<string, string | undefined>?]> = (path, body, headers = {}) => fetch(rootPath + '/api/' + path, {
-        headers: { 'content-type': 'application/json', ...headers },
+    const request: RequestFunction = (path, body) => fetch(`${rootPath}/api/${path}`, {
+        headers: { 'content-type': 'application/json' },
         method: body ? 'POST' : 'GET',
         body: body ? JSON.stringify(body) : null,
     }).then(d => d.json());
-    const requestDashboard = <T,>(path: string, body?: any) => request<T>('dashboard/' + path, body, { Authorization: password! });
+    const requestDashboard = <T,>(path: string, body?: any) => request<T>(`dashboard/${path}?auth=${encodeURIComponent(password!)}`, body);
     const initFiles = (d: Dir) => {
         const obj = traverse(d);
         dispatch({ type: Actions.INIT, payload: obj });

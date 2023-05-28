@@ -49,4 +49,4 @@ export type Config = {
     heightOffset?: string;
 };
 
-export type RequestFunction<U extends any[] = []> = <T>(path: string, body?: any, ...a: U) => Promise<T & { error?: string; }>;
+export type RequestFunction = <T>(path: string, body?: any) => Promise<T & { error?: string; }>;
