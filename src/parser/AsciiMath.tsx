@@ -56,12 +56,8 @@ const renderAlignment = (arr: string[][]) => arr.map(x => x.map(x => `\\displays
 
 const compileAM = (x: string) => AMTparseAMtoTeX(
     x
-        .replace(/Lapl/g, '\\mathcal{L}')
-        .replace(/Four/g, '\\mathcal{F}')
-        .replace(/Int/g, '\\mathcal{I}')
-        .replace(/Der/g, '\\mathcal{D}')
-        .replace(/(_\w+?)?(Sum|Delta)/g, '{::}$&')
-        .replace(/Sum/g, '\\mathcal{S}')
+        .replace(/(_\w+?)?(Sum|Delta|Int|Tran)/g, '{::}$&')
+        .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum/g, x => `\\mathcal{${x[0]}}`)
         .replace(/eps([^i]|$)/g, 'varepsilon$1')
         .replace(/(^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '$1(d $2^$3)')
         .replace(/(^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '$1{:d $2:}')
