@@ -12,7 +12,7 @@ import ViewDoc from './views/ViewDoc';
 const INCORRECT_PASS_TIMEOUT = 2000;
 
 export const Documents = (config: Config) => {
-    const getPath = () => decodeURIComponent(window.location.pathname).split('/').slice((config.rootPath?.length || 0) + 1).filter(x => x);
+    const getPath = () => window.location.pathname.split('/').slice((config.rootPath?.length || 0) + 1).filter(x => x).map(x => decodeURIComponent(x));
     const getPassword = () => localStorage.getItem('password');
     const request: RequestFunction = (path, body) => fetch(`${rootPath}/api/${path}`, {
         headers: { 'content-type': 'application/json' },
