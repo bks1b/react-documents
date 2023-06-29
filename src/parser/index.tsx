@@ -59,7 +59,7 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
             if (header) {
                 if (fallbacks) offset += 1 + (elementCount + offset) % fallbacks.length;
                 const Tag = 'h' + Math.min(Math.max(1, header[1].length), 6) as keyof JSX.IntrinsicElements;
-                arr.push(<Tag key={i} className='parsedHeader'>{header[2]}</Tag>);
+                arr.push(<Tag key={arr.length} className='parsedHeader'>{header[2]}</Tag>);
                 continue;
             }
             const [, name, args] = lines[i]?.match(/^<(\S+)\s*(.+?)?>$/) || [];
@@ -73,7 +73,7 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
                     else bools[m[5]] = true;
                 }
                 offset++;
-                arr.push(<Fragment key={i}>{
+                arr.push(<Fragment key={arr.length}>{
                     elements[name].render(
                         parseUntil(
                             elements[name].closingTag ? `</${name}>` : '',
@@ -90,7 +90,7 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
                 const fb = fallbacks[(elementCount + offset) % fallbacks.length];
                 el = elements[fb[0] as string].render(parseUntil(''), fb[1] || {}, fb[2] || {});
             } else el = elements.text.render(parseUntil(''), {}, {});
-            arr.push(<Fragment key={i}>{el}</Fragment>);
+            arr.push(<Fragment key={arr.length}>{el}</Fragment>);
         }
         return <>{arr}</>;
     } catch (e) {
