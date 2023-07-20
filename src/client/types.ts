@@ -47,6 +47,7 @@ export type Config = {
     padding?: boolean;
     Renderer: FC<Record<'name' | 'text', string>>;
     heightOffset?: string;
+    rootElement: HTMLElement;
 };
 
 export type RequestFunction = <T>(path: string, body?: any) => Promise<T & { error?: string; }>;

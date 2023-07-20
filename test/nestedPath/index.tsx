@@ -10,4 +10,6 @@ const Renderer = (props: { name: string; text: string; }) => <>
     }} fallbacks={[['el1'], ['text']]}/>
 </>;
 
-createRoot(document.getElementById('root')!).render(<Documents title='Test' Renderer={Renderer} rootPath={['docs']} padding/>);
+const root = document.getElementById('root')!;
+
+createRoot(root).render(<Documents title='Test' Renderer={Renderer} rootPath={['docs']} padding rootElement={root}/>);

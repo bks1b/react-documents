@@ -43,7 +43,17 @@ export const Documents = (config: Config) => {
         window.onpopstate = () => {
             setPath(getPath());
             setPassword(getPassword());
-        };    
+        };
+        new MutationObserver(() => {
+            const split = document.querySelector('.split') as HTMLElement;
+            if (split) (window.onresize = () => {
+                config.rootElement.style.width = split.style.width = window.innerWidth + 'px';
+                config.rootElement.style.height = split.style.height = window.innerHeight + 'px';
+            })();
+        }).observe(document.body, {
+            childList: true, 
+            subtree: true,
+        });
     }, []);
     useEffect(() => {
         if (password) {

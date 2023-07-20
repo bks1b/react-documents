@@ -26,4 +26,6 @@ const Renderer = (props: { name: string; text: string; }) => {
     </>;
 };
 
-createRoot(document.getElementById('root')!).render(<Documents title='Test' Renderer={Renderer}/>);
+const root = document.getElementById('root')!;
+
+createRoot(root).render(<Documents title='Test' Renderer={Renderer} rootElement={root}/>);
