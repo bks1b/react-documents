@@ -44,7 +44,7 @@ export const getRouter = (config: Config) => {
 export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0">
         <link rel="stylesheet" href="${config.rootPath || ''}/baseStyle.css">
         ${config.parser ? `<link rel="stylesheet" href="${config.rootPath || ''}/parser.css">` : ''}
         ${
