@@ -58,6 +58,7 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
     x
         .replace(/(_\w+?)?(Sum|Delta|Int|Tran)/g, '{::}$&')
         .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum/g, x => `\\mathcal{${x[0]}}`)
+        .replace(/phi/g, 'varphi')
         .replace(/eps([^i]|$)/g, 'varepsilon$1')
         .replace(/(^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '$1(d $2^$3)')
         .replace(/(^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '$1{:d $2:}')
