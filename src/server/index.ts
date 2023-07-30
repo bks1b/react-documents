@@ -13,14 +13,15 @@ export const getRouter = (config: Config) => {
         .then(d => d.text())
         .then(d => d
             .replace('//some greek symbols', `
-                ${['sgn', 'deg', 'Ei', 'li', 'Li', 'Im', 'Re', 'arg', 'Arg'].map(x => `{ input: "${x}", tag: "mo", output: "${x}", tex: "text{${x}}", ttype: UNARY, func: true },`).join('')}
+                ${['sgn', 'deg', 'Ei', 'li', 'Li', 'Im', 'Re', 'arg', 'Arg'].map(x => `{ input: "${x}", tag: "mo", output: "${x}", tex: "text{${x}}", ttype: UNARY, func: true },`).join(' ')}
                 { input: "=<", tag: "mo", output: "=<", tex: "le", ttype: CONST },
             `)
             .replace(/(?<=input:"(sech|csch|Log)", {2}tag:"mo", output:".+?", tex:)null/g, '"text{$1}"')
             .replace('"harr"', '"<->"')
             .replace(/(?<={input:"=>",.+?tex:")Rightarrow/, 'implies')
             .replace(/(?<={input:"<=",.+?tex:")le/, 'impliedby')
-            .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff'),
+            .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff')
+            .replace(/\{input:"-:",(.+?)tex:"div"(.+?)\}/, '{ input: "div",$1tex: "mid"$2 }, { input: "!div",$1tex: "nmid"$2 }'),
         );
     return Router().use(config.rootPath || '',
         Router()
