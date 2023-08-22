@@ -57,9 +57,10 @@ const renderAlignment = (arr: string[][]) => arr.map(x => x.map(x => `\\displays
 const compileAM = (x: string) => AMTparseAMtoTeX(
     x
         .replace(/(_\w+?)?(Sum|Delta|Int|Tran|Cont)/g, '{::}$&')
-        .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum|Cont/g, x => `\\mathcal{${x === 'Cont' ? 'K' : x[0]}}`)
+        .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum|Cont|Pow/g, x => `\\mathcal{${x === 'Cont' ? 'K' : x[0]}}`)
         .replace(/PP/g, '\\mathbb{P}')
-        .replace(/phi/g, 'varphi')
+        .replace(/(^|[^v])phi/g, '$1varphi')
+        .replace(/vphi/g, 'phi')
         .replace(/eps([^i]|$)/g, 'varepsilon$1')
         .replace(/(^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '$1(d $2^$3)')
         .replace(/(^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '$1{:d $2:}')
@@ -74,7 +75,8 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
     .replace(/(\{\\mid\}|\{\\left\||\\right\|\}){2}/g, '\\|')
     .replace(/(\{h\}\{a\}|\{v\}\{a\}\{g\}\{y\})/g, x => `\\hspace{${TEXT_SPACE}}\\text{${x.replace(/[{}]/g, '')}}\\hspace{${TEXT_SPACE}}`)
     .replace(/\{e\}\{l\}\{l\}/g, '{\\ell}')
-    .replace(/\{s\}\{s\}\{t\}\{a\}\{c\}\{k\}\{\\left\((.+?)\\right\)\}/g, (_, x) => `\\substack{${x.replace(/\\backslash/g, '\\\\')}}`);
+    .replace(/\{m\}\{l\}(.+?)\{m\}\{l\}/g, (_, x) => `\\substack{${x.replace(/\{b\}\{r\}/g, '\\\\')}}`)
+    .replace(/\{\\left\(\\text\{mod\}/g, '\\quad$&\\ ');
 
 const compileExpr = (x: string) => {
     let lastSplit = 0;
