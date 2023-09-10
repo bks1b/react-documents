@@ -67,7 +67,7 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
         .replace(/([^\s]):=/g, '$1 :='),
 )
     .replace(/(\{o\})?\{i\}(\{i\})?\\int(\{s\})?(_.+?)?/g, (_, closed, third, surface, sub) => `\\${closed ? 'o' : ''}${'i'.repeat(third ? 3 : 2)}nt${sub ? `${surface || closed ? '' : '\\limits'}${sub}` : ''}`)
-    .replace(/\{b\}\\in\{o\}\{\{m\}_(.+?)\^\{(.)/g, '{{\\binom$1$2')
+    .replace(/\{b\}\\in\{o\}\{\{m\}_(.+?)\^\{(.)(?:(.+?)\{c\}\{o\})?/g, (_, a, b, c) => `${c ? '\\left(\\!\\!' : ''}{{\\binom${a}${b}${c ? c + '\\!\\!\\right)' : ''}`)
     .replace(/\{e\}\{v\}\{a\}\{l\}\{l\}/g, '\\left.')
     .replace(/\{e\}\{v\}\{a\}\{l\}/g, '{\\left.')
     .replace(/\\:=/g, ':=')
