@@ -77,7 +77,8 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
     .replace(/\{e\}\{l\}\{l\}/g, '{\\ell}')
     .replace(/\{m\}\{l\}(.+?)\{m\}\{l\}/g, (_, x) => `\\substack{${x.replace(/\{b\}\{r\}/g, '\\\\')}}`)
     .replace(/\{\\left\(\\text\{mod\}/g, '\\quad$&\\ ')
-    .replace(/([^(])\\text\{mod\}/g, '$1\\bmod');
+    .replace(/([^(])\\text\{mod\}/g, '$1\\bmod')
+    .replace(/#/g, '\\#');
 
 const compileExpr = (x: string) => {
     let lastSplit = 0;
