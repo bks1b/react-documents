@@ -17,7 +17,7 @@ export default () => {
     setTitle();
     return <Sidebar dashboard sidebarChildren={
         <>
-            <Link path={[]} onClick={() => ctx.logout()}>Kijelentkezés</Link>
+            <Link path={[]} onClick={() => ctx.auth(0)}>Kijelentkezés</Link>
             <br/>
             <label className='button'>Branch: <select onChange={e => setBranch(e.target.selectedIndex)} defaultValue={0}>
                 {branches.map((x, i) => <option key={i}>{x[1]}</option>)}

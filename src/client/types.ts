@@ -37,7 +37,7 @@ export type MainContextType = {
     resolvePath: (path: string[]) => string;
     navigate: (path: string[]) => void;
     dispatch: (x: Action) => Promise<boolean>;
-    logout: () => void;
+    auth: (n: 0 | 1) => void;
     state: DirState;
 } & Record<'request' | 'requestDashboard', RequestFunction>;
 

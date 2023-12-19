@@ -13,13 +13,13 @@ const INCORRECT_PASS_TIMEOUT = 2000;
 
 export const Documents = (config: Config) => {
     const getPath = () => window.location.pathname.split('/').slice((config.rootPath?.length || 0) + 1).filter(x => x).map(x => decodeURIComponent(x));
-    const getPassword = () => localStorage.getItem('password');
+    const getLoggedIn = () => !!+localStorage.getItem('loggedIn')!;
     const request: RequestFunction = (path, body) => fetch(`${rootPath}/api/${path}`, {
         headers: { 'content-type': 'application/json' },
         method: body ? 'POST' : 'GET',
         body: body ? JSON.stringify(body) : null,
     }).then(d => d.json());
-    const requestDashboard = <T,>(path: string, body?: any) => request<T>(`dashboard/${path}?auth=${encodeURIComponent(password!)}`, body);
+    const requestDashboard = <T,>(path: string, body?: any) => request<T>(`dashboard/${path}?auth=${encodeURIComponent(localStorage.getItem('password')!)}`, body);
     const initFiles = (d: Dir) => {
         const obj = traverse(d);
         dispatch({ type: Actions.INIT, payload: obj });
@@ -29,20 +29,20 @@ export const Documents = (config: Config) => {
         window.history.pushState('', '', resolvePath(newPath));
         setPath(newPath);
     };
-    const logout = () => {
-        localStorage.removeItem('password');
-        setPassword(null);
+    const auth = (n: 0 | 1) => {
+        localStorage.setItem('loggedIn', n + '');
+        setLoggedIn(!!n);
     };
 
     const rootPath = config.rootPath ? '/' + config.rootPath.join('/') : '';
     const [path, setPath] = useState(getPath());
-    const [password, setPassword] = useState(getPassword());
-    const [auth, setAuth] = useState<AuthType>(AuthType.LOADING);
+    const [loggedIn, setLoggedIn] = useState(getLoggedIn());
+    const [authType, setAuthType] = useState<AuthType>(AuthType.LOADING);
     const [state, dispatch] = useReducer(reducer(requestDashboard), {});
     useEffect(() => {
         window.onpopstate = () => {
             setPath(getPath());
-            setPassword(getPassword());
+            setLoggedIn(getLoggedIn());
         };
         new MutationObserver(() => {
             const split = document.querySelector('.split') as HTMLElement;
@@ -56,41 +56,41 @@ export const Documents = (config: Config) => {
         });
     }, []);
     useEffect(() => {
-        if (password) {
-            setAuth(AuthType.LOADING);
+        if (loggedIn) {
+            setAuthType(AuthType.LOADING);
             dispatch({ type: Actions.RESET });
             let loaded = false;
             requestDashboard('auth').then(() => {
                 loaded = true;
-                setAuth(AuthType.ADMIN);
+                setAuthType(AuthType.ADMIN);
                 requestDashboard<Dir>('files/get', { branch: 'dev' }).then(initFiles);
             });
             setTimeout(() => {
-                if (!loaded) setAuth(AuthType.INCORRECT);
+                if (!loaded) setAuthType(AuthType.INCORRECT);
             }, INCORRECT_PASS_TIMEOUT);
         } else {
-            setAuth(AuthType.USER);
+            setAuthType(AuthType.USER);
             request<Dir>('files').then(initFiles);
         }
-    }, [password]);
+    }, [loggedIn]);
 
     if (path.length === 1) {
         if (path[0] === 'login') {
             const str = prompt('Jelszó');
             if (str) {
                 localStorage.setItem('password', str);
-                setPassword(str);
+                auth(1);
             }
             navigate([]);
             return <></>;
         }
         if (path[0] === 'logout') {
-            logout();
+            auth(0);
             navigate([]);
             return <></>;
         }
     }
-    if (!state.data || auth === AuthType.INCORRECT) return <></>;
+    if (!state.data || authType === AuthType.INCORRECT) return <></>;
     const doc = traverseSearch(state.data, path);
     if (!doc) {
         document.title = 'A dokumentum nem található | ' + config.title;
@@ -99,7 +99,7 @@ export const Documents = (config: Config) => {
     return <MainContext.Provider value={{
         state,
         dispatch: async d => {
-            if (auth === AuthType.ADMIN) {
+            if (authType === AuthType.ADMIN) {
                 let curr;
                 try {
                     curr = await requestDashboard<Dir & { _id?: string; }>('files/get', { branch: 'dev' });
@@ -116,7 +116,7 @@ export const Documents = (config: Config) => {
             dispatch(d);
             return true;
         },
-        logout,
+        auth,
         resolvePath,
         navigate,
         request,
@@ -134,9 +134,9 @@ export const Documents = (config: Config) => {
         }}>
             {
                 !path.length
-                    ? auth === AuthType.ADMIN ? <Dashboard/> : <Home/>
+                    ? authType === AuthType.ADMIN ? <Dashboard/> : <Home/>
                     : doc[0].type === 'doc'
-                        ? auth === AuthType.ADMIN ? <EditDoc key={doc[0].path.join('/')} doc={doc[0]}/> : <ViewDoc doc={doc[0]}/>
+                        ? authType === AuthType.ADMIN ? <EditDoc key={doc[0].path.join('/')} doc={doc[0]}/> : <ViewDoc doc={doc[0]}/>
                         : <ViewDir dir={doc[0]}/>
             }
         </ConfigContext.Provider>
