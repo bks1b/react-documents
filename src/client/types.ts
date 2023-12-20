@@ -14,6 +14,7 @@ export enum Actions {
     CANCEL_MOVE,
     MOVE_HERE,
     EDIT,
+    TOGGLE_PUBLIC,
 }
 
 export enum AuthType {
@@ -29,6 +30,7 @@ export type Action = ({ path?: string[]; payload?: unknown; } & (
     | { type: Actions.RENAME | Actions.NEW_DOC | Actions.NEW_DIR | Actions.EDIT; payload: string; }
     | { type: Actions.OPEN | Actions.DELETE | Actions.MOVE_TO | Actions.CANCEL_MOVE | Actions.MOVE_HERE; }
     | { type: Actions.MOVE; payload: -1 | 1; }
+    | { type: Actions.TOGGLE_PUBLIC; }
 ));
 
 export type DirState = { data?: Dir; pendingMove?: string[]; };

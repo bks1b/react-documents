@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { BaseFile } from '../../types';
 import { Action, Actions, MainContextType } from '../types';
 import { eqPath, MainContext } from '../util';
-import { cross, FolderArrow, folderCross, rename, Triangle } from './icons';
+import { cross, crossedLock, FolderArrow, folderCross, lock, rename, Triangle } from './icons';
 
 export default class<T extends BaseFile, U = {}> extends Component<{
     data: T;
@@ -36,6 +36,7 @@ export default class<T extends BaseFile, U = {}> extends Component<{
                 name => this.dispatch(Actions.RENAME, name),
             )}>{rename}</div>
             <div onClick={() => confirm(`Biztosan kitörli a ${this.props.data.name} ${'text' in this.props.data ? 'fájlt' : 'mappát'}?`) && this.dispatch(Actions.DELETE)}>{cross}</div>
+            <div onClick={() => this.dispatch(Actions.TOGGLE_PUBLIC)}>{this.props.data.public ? lock : crossedLock}</div>
             {
                 this.context.state.pendingMove
                     ? this.isPendingMove

@@ -1,4 +1,8 @@
-export type BaseFile = { name: string; path: string[]; };
+export type BaseFile = {
+    name: string;
+    public: boolean;
+    path: string[];
+};
 
 export type Dir = BaseFile & {
     type: 'dir';

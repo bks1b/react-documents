@@ -31,6 +31,19 @@ const baseFolder = (children?: (...args: number[]) => JSX.Element) => {
     </svg>;
 };
 
+const baseLock = (children?: (...args: number[]) => JSX.Element) => {
+    const r = 9;
+    const gap = 2.5;
+    const h = 16;
+    const w = 2 * (r + gap);
+    const totalH = r + h;
+    return <svg className='icon' width={w} height={totalH}>
+        <circle cx={r + gap} cy={r} r={r} {...stroke}/>
+        <polygon points={`0,${r} ${w},${r} ${w},${totalH} 0,${totalH}`} {...stroke}/>
+        {children?.(w, totalH)}
+    </svg>;
+};
+
 export const Triangle = (props: { angle: number; fill?: boolean; }) => {
     const n = 20;
     return <svg className='icon' width={n + 2} height={n + 2} style={rotate(props.angle)}>
@@ -84,3 +97,7 @@ export const rename = (() => {
         <line x1={cursorX} y1={0} x2={cursorX} y2={cursorH} {...stroke}/>
     </svg>;
 })();
+
+export const lock = baseLock();
+
+export const crossedLock = baseLock((w, h) => <line x1={0} y1={h} x2={w} y2={0} {...stroke}/>);

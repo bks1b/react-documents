@@ -25,6 +25,7 @@ export default (requestDashboard: RequestFunction) => (oldState: DirState, { typ
             (<Dir>target).folders.push({
                 type: 'dir',
                 name: payload,
+                public: true,
                 path: [...target.path, payload],
                 open: false,
                 files: [],
@@ -32,7 +33,13 @@ export default (requestDashboard: RequestFunction) => (oldState: DirState, { typ
             });
             break;
         case Actions.NEW_DOC:
-            (<Dir>target).files.push({ type: 'doc', name: payload, path: [...target.path, payload], text: '' });
+            (<Dir>target).files.push({
+                type: 'doc',
+                name: payload,
+                public: true,
+                path: [...target.path, payload],
+                text: '',
+            });
             break;
         case Actions.DELETE:
             parent.splice(index, 1);
@@ -43,6 +50,9 @@ export default (requestDashboard: RequestFunction) => (oldState: DirState, { typ
             toMove[0].path = [...target.path, toMove[0].name];
             toMove[1].splice(toMove[2], 1);
             state.pendingMove = undefined;
+            break;
+        case Actions.TOGGLE_PUBLIC:
+            target.public = !target.public;
             break;
         default:
             if (type === Actions.OPEN) (<Dir>target).open = !(<Dir>target).open;

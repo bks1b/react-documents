@@ -30,6 +30,7 @@ export const traverseSearch = (dir: Dir, path: string[]): [Dir | Doc, (Dir | Doc
 export const traverse = (dir: Dir, path: string[] = []): Dir => ({
     type: 'dir',
     name: dir.name,
+    public: dir.public,
     open: !path.length,
     path,
     folders: dir.folders.map(x => traverse(x, [...path, x.name])),
@@ -41,6 +42,7 @@ export const traverse = (dir: Dir, path: string[] = []): Dir => ({
 });
 export const inverseTraverse = (dir: Dir): Dir => ({
     name: dir.name,
-    files: dir.files.map(x => ({ name: x.name, text: x.text })),
+    public: dir.public,
+    files: dir.files.map(x => ({ name: x.name, public: x.public, text: x.text })),
     folders: dir.folders.map(x => inverseTraverse(x)),
 }) as Dir;
