@@ -57,7 +57,7 @@ const renderAlignment = (arr: string[][]) => arr.map(x => x.map(x => `\\displays
 const compileAM = (x: string) => AMTparseAMtoTeX(
     x
         .replace(/(_\w+?)?(Sum|Delta|Int|Tran|Cont)/g, '{::}$&')
-        .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum|Cont|Pow/g, x => `\\mathcal{${x === 'Cont' ? 'K' : x[0]}}`)
+        .replace(/Tran|Lapl|Blapl|Four|Int|Der|Sum|Cont|Pow|cal(.)/g, (x, y) => `\\mathcal{${x === 'Cont' ? 'K' : y || x[0]}}`)
         .replace(/PP/g, '\\mathbb{P}')
         .replace(/(^|[^v])phi/g, '$1varphi')
         .replace(/vphi/g, 'phi')
