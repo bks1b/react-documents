@@ -64,7 +64,12 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
         .replace(/eps([^i]|$)/g, 'varepsilon$1')
         .replace(/(^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '$1(d $2^$3)')
         .replace(/(^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '$1{:d $2:}')
-        .replace(/([^\s]):=/g, '$1 :='),
+        .replace(/([^\s]):=/g, '$1 :=')
+        .replace(/!([^ ])/g, '!.$1')
+        .replace(/Q(R|G)(.+?)( |$)/g, (_, t, x) => {
+            const r = `ZZ//${x}ZZ`;
+            return t === 'R' ? r : `(${r})^(xx)`;
+        }),
 )
     .replace(/(\{o\})?\{i\}(\{i\})?\\int(\{s\})?(_.+?)?/g, (_, closed, third, surface, sub) => `\\${closed ? 'o' : ''}${'i'.repeat(third ? 3 : 2)}nt${sub ? `${surface || closed ? '' : '\\limits'}${sub}` : ''}`)
     .replace(/\{b\}\\in\{o\}\{\{m\}_(.+?)\^\{(.)(?:(.+?)\{c\}\{o\})?/g, (_, a, b, c) => `${c ? '\\left(\\!\\!' : ''}{{\\binom${a}${b}${c ? c + '\\!\\!\\right)' : ''}`)
@@ -78,7 +83,8 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
     .replace(/\{m\}\{l\}(.+?)\{m\}\{l\}/g, (_, x) => `\\substack{${x.replace(/\{b\}\{r\}/g, '\\\\')}}`)
     .replace(/\{\\left\(\\text\{mod\}/g, '\\quad$&\\ ')
     .replace(/([^(])\\text\{mod\}/g, '$1\\bmod')
-    .replace(/#/g, '\\#');
+    .replace(/#/g, '\\#')
+    .replace(/!\./g, '\\not');
 
 const compileExpr = (x: string) => {
     let lastSplit = 0;

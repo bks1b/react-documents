@@ -22,7 +22,8 @@ export const getRouter = (config: Config) => {
             .replace(/(?<={input:"=>",.+?tex:")Rightarrow/, 'implies')
             .replace(/(?<={input:"<=",.+?tex:")le/, 'impliedby')
             .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff')
-            .replace(/\{input:"-:",(.+?)tex:"div"(.+?)\}/, '{ input: "div",$1tex: "mid"$2 }, { input: "!div",$1tex: "nmid"$2 }'),
+            .replace(/\{input:"-:",(.+?)tex:"div"(.+?)\}/, '{ input: "div",$1tex: "mid"$2 }, { input: "!div",$1tex: "nmid"$2 }')
+            .replace('stackrel{\\\\sim}{=}', '\\cong'),
         );
     return Router().use(config.rootPath || '',
         Router()
