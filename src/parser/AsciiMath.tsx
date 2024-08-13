@@ -65,7 +65,7 @@ const compileAM = (x: string) => AMTparseAMtoTeX(
         .replace(/(^|\/)d([a-zA-Z])\^([a-zA-Z0-9])/g, '$1(d $2^$3)')
         .replace(/(^|[/\s])d(vec[a-zA-Z]|[a-zA-Z])(?![a-zA-Z])/g, '$1{:d $2:}')
         .replace(/([^\s]):=/g, '$1 :=')
-        .replace(/!([^ ])/g, '!.$1')
+        .replace(/!((?! |\)|\]|\}|!|div))/g, '!.$1')
         .replace(/Q(R|G)(.+?)( |$)/g, (_, t, x) => {
             const r = `ZZ//${x}ZZ`;
             return t === 'R' ? r : `(${r})^(xx)`;
