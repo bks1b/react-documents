@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 const stroke = { stroke: 'black', strokeWidth: 2, fill: 'white' };
 
 const rotate = (n: number) => ({

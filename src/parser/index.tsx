@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, JSX } from 'react';
 import { Table } from './Table';
 import { Text } from './Text';
 import { AsciiMath } from './AsciiMath';
@@ -96,7 +96,7 @@ export const Parser = <T extends Elements>({ text, fallbacks, elements: extEleme
     } catch (e) {
         console.error(e);
         return <>
-            <div className='h2'>Hiba</div>
+            <div className='h2'>Error</div>
             {e + ''}
         </>;
     }

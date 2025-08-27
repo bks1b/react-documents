@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 export type Args = Record<string, string>;
 export type Bools = Record<string, boolean>;
 

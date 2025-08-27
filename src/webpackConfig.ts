@@ -3,7 +3,7 @@ import { Configuration, DefinePlugin, RuleSetRule } from 'webpack';
 
 export const webpackConfig = (entry: string, extended?: { rules?: RuleSetRule[]; }): Configuration[] => [{
     mode: 'none',
-    entry: { app: entry },
+    entry,
     target: 'web',
     resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     module: {
@@ -14,7 +14,7 @@ export const webpackConfig = (entry: string, extended?: { rules?: RuleSetRule[];
         }, ...extended?.rules || []],
     },
     output: {
-        filename: '[name].js',
+        filename: 'app.js',
         path: join(process.cwd(), 'build'),
     },
     plugins: [new DefinePlugin({ 'process.env': '({})' })],

@@ -1,30 +1,16 @@
 import { join } from 'path';
 import express, { Router } from 'express';
-import fetch from 'node-fetch';
 import api from './routes/api';
 import dashboard from './routes/dashboard';
 import Database, { DatabaseConfig } from './Database';
+
+const KATEX = 'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css';
 
 const moduleDir = __dirname.split(/[/\\]/).slice(0, -3);
 
 export const getRouter = (config: Config) => {
     const db = new Database(config.database);
-    const asciiMath = !config.excludeMath && fetch('https://raw.githubusercontent.com/asciimath/asciimathml/master/asciimath-based/ASCIIMathTeXImg.js')
-        .then(d => d.text())
-        .then(d => d
-            .replace('//some greek symbols', `
-                ${['sgn', 'deg', 'rad', 'Ei', 'li', 'Li', 'Im', 'Re', 'arg', 'Arg', 'ord', 'ind', 'ker'].map(x => `{ input: "${x}", tag: "mo", output: "${x}", tex: "text{${x}}", ttype: UNARY, func: true },`).join(' ')}
-                { input: "=<", tag: "mo", output: "=<", tex: "le", ttype: CONST },
-                { input: "ng", tag: "mo", output: "ng", tex: "triangleleft", ttype: CONST },
-            `)
-            .replace(/(?<=input:"(sech|csch|Log)", {2}tag:"mo", output:".+?", tex:)null/g, '"text{$1}"')
-            .replace('"harr"', '"<->"')
-            .replace(/(?<={input:"=>",.+?tex:")Rightarrow/, 'implies')
-            .replace(/(?<={input:"<=",.+?tex:")le/, 'impliedby')
-            .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff')
-            .replace(/\{input:"-:",(.+?)tex:"div"(.+?)\}/, '{ input: "div",$1tex: "mid"$2 }, { input: "!div",$1tex: "nmid"$2 }')
-            .replace('stackrel{\\\\sim}{=}', '\\cong'),
-        );
+    const asciiMath = !config.excludeMath && getAM();
     return Router().use(config.rootPath || '',
         Router()
             .use(express.json({ limit: '1tb' }))
@@ -44,6 +30,23 @@ export const getRouter = (config: Config) => {
     );
 };
 
+export const getAM = () => fetch('https://raw.githubusercontent.com/asciimath/asciimathml/master/asciimath-based/ASCIIMathTeXImg.js')
+    .then(d => d.text())
+    .then(d => d
+        .replace('//some greek symbols', `
+            ${['sgn', 'deg', 'rad', 'Ei', 'li', 'Li', 'Im', 'Re', 'arg', 'Arg', 'ord', 'ind', 'ker'].map(x => `{ input: "${x}", tag: "mo", output: "${x}", tex: "text{${x}}", ttype: UNARY, func: true },`).join(' ')}
+            { input: "=<", tag: "mo", output: "=<", tex: "le", ttype: CONST },
+            { input: "ng", tag: "mo", output: "ng", tex: "triangleleft", ttype: CONST },
+        `)
+        .replace(/(?<=input:"(sech|csch|Log)", {2}tag:"mo", output:".+?", tex:)null/g, '"text{$1}"')
+        .replace('"harr"', '"<->"')
+        .replace(/(?<={input:"=>",.+?tex:")Rightarrow/, 'implies')
+        .replace(/(?<={input:"<=",.+?tex:")le/, 'impliedby')
+        .replace(/(?<={input:"<=>".+?tex:")Leftrightarrow/, 'iff')
+        .replace(/\{input:"-:",(.+?)tex:"div"(.+?)\}/, '{ input: "div",$1tex: "mid"$2 }, { input: "!div",$1tex: "nmid"$2 }')
+        .replace('stackrel{\\\\sim}{=}', '\\cong'),
+    );
+
 export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
 <html>
     <head>
@@ -53,7 +56,7 @@ export const getHTML = (config: HTMLConfig & BaseConfig) => `<!DOCTYPE html>
         ${
             config.excludeMath
                 ? ''
-                : `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css"><script src="${config.rootPath || ''}/asciimath.js"></script>`
+                : `<link rel="stylesheet" href="${KATEX}"><script src="${config.rootPath || ''}/asciimath.js"></script>`
         }
         ${config.serviceWorker ? `<script>navigator.serviceWorker.register('${config.rootPath || ''}/sw.js');</script>` : ''}
         ${config.head || ''}
@@ -75,7 +78,7 @@ const INITIAL_CACHE = ${JSON.stringify([
         ...config.html?.parser ? ['parser.css'] : [],
     ].map(x => `${config.rootPath || ''}/${x}`),
     ...config.excludeMath ? [] : [
-        'https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css',
+        KATEX,
         ...['AMS-Regular', 'Caligraphic-Bold', 'Caligraphic-Regular', 'Fraktur-Bold', 'Fraktur-Regular', 'Main-Bold', 'Main-BoldItalic', 'Main-Italic', 'Main-Regular', 'Math-BoldItalic', 'Math-Italic', 'SansSerif-Bold', 'SansSerif-Italic', 'SansSerif-Regular', 'Script-Regular', 'Size1-Regular', 'Size2-Regular', 'Size3-Regular', 'Size4-Regular', 'Typewriter-Regular'].map(x => `https://cdn.jsdelivr.net/npm/katex/dist/fonts/KaTeX_${x}.woff2`),
     ],
     ...config.serviceWorker?.initialCache || [],

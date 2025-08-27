@@ -4,7 +4,7 @@ import express from 'express';
 import { getRouter } from '../../src/server';
 
 const PORT = 2000;
-config();
+config({ quiet: true });
 
 const app = express();
 app.listen(PORT, () => console.log('Listening on port', PORT));
