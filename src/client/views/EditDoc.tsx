@@ -18,10 +18,14 @@ export default ({ doc }: { doc: Doc; }) => {
         <div className='evenSplit'>
             <div className='topRight'>
                 {changed && <button onClick={async () => {
-                    if (await dispatch({ type: Actions.EDIT, path: doc.path, payload: text })) setChanged(false);
+                    if (await dispatch({ type: Actions.EDIT, path: doc.path, payload: text })) {
+                        window.onbeforeunload = null;
+                        setChanged(false);
+                    }
                 }}>Mentés</button>}
             </div>
             <textarea onChange={e => {
+                window.onbeforeunload = () => true;
                 lastChange = Date.now();
                 setTimeout(() => {
                     if (Date.now() - lastChange >= RENDER_TIMEOUT) {

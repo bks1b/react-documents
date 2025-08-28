@@ -17,6 +17,8 @@ export default (props: {
         onMouseUp={e => {
             if (!isTarget) return;
             isTarget = false;
+            if (window.onbeforeunload && !confirm('Biztosan elhagyja az oldalt?')) return;
+            window.onbeforeunload = null;
             props.onClick?.();
             if (e.button === 1) window.open(ctx.resolvePath(props.path));
             else if (e.button === 0) ctx.navigate(props.path);
