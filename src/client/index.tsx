@@ -1,13 +1,16 @@
 import { useEffect, useReducer, useState } from 'react';
 import { Dir } from '../types';
 import reducer from './reducer';
-import { Actions, AuthType, Config, RequestFunction } from './types';
 import { ConfigContext, MainContext, traverseSearch, traverse, inverseTraverse } from './util';
+import Link from './components/Link';
+import { Actions, AuthType, Config, RequestFunction } from './types';
+
 import Dashboard from './views/Dashboard';
 import EditDoc from './views/EditDoc';
 import Home from './views/Home';
 import ViewDir from './views/ViewDir';
 import ViewDoc from './views/ViewDoc';
+import NotFound from './views/NotFound';
 
 const INCORRECT_PASS_TIMEOUT = 2000;
 
@@ -92,10 +95,6 @@ export const Documents = (config: Config) => {
     }
     if (!state.data || authType === AuthType.INCORRECT) return <></>;
     const doc = traverseSearch(state.data, path);
-    if (!doc) {
-        document.title = 'A dokumentum nem található | ' + config.title;
-        return <div className='padding h2'>A dokumentum nem található.</div>;
-    }
     return <MainContext.Provider value={{
         state,
         dispatch: async d => {
@@ -126,6 +125,11 @@ export const Documents = (config: Config) => {
             title: config.title,
             heightOffset: config.heightOffset,
             rootPath,
+            getButtons: (name, child) => <div className='gap'>
+                {name ? <Link path={[]}>{'Vissza a ' + name}</Link> : ''}
+                {child || ''}
+                {config.button || ''}
+            </div>,
             render: (name: string, text: string) => <div className='renderedContainer'>
                 <div className={`rendered${config.padding ? ' padding' : ''}`}>
                     <config.Renderer {...{ name, text }}/>
@@ -135,9 +139,11 @@ export const Documents = (config: Config) => {
             {
                 !path.length
                     ? authType === AuthType.ADMIN ? <Dashboard/> : <Home/>
-                    : doc[0].type === 'doc'
-                        ? authType === AuthType.ADMIN ? <EditDoc key={doc[0].path.join('/')} doc={doc[0]}/> : <ViewDoc doc={doc[0]}/>
-                        : <ViewDir dir={doc[0]}/>
+                    : doc
+                        ? doc[0].type === 'doc'
+                            ? authType === AuthType.ADMIN ? <EditDoc key={doc[0].path.join('/')} doc={doc[0]}/> : <ViewDoc doc={doc[0]}/>
+                            : <ViewDir dir={doc[0]}/>
+                        : <NotFound/>
             }
         </ConfigContext.Provider>
     </MainContext.Provider>;

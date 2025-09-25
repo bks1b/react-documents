@@ -1,10 +1,13 @@
 import { useContext } from 'react';
 import Link from '../components/Link';
 import Sidebar from '../components/Sidebar';
-import { MainContext, setTitle } from '../util';
+import { ConfigContext, MainContext, setTitle } from '../util';
 
 export default () => {
-    const ctx = useContext(MainContext)!;
+    const { auth } = useContext(MainContext)!;
+    const { getButtons } = useContext(ConfigContext)!;
     setTitle('Főoldal');
-    return <Sidebar sidebarChildren={localStorage.getItem('password') ? <Link path={[]} onClick={() => ctx.auth(1)}>Bejelentkezés</Link> : null}/>;
+    return <Sidebar sidebarChildren={
+        getButtons('', localStorage.getItem('password') && <Link path={[]} onClick={() => auth(1)}>Bejelentkezés</Link>)
+    }/>;
 };

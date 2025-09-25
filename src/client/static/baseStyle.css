@@ -35,13 +35,13 @@ textarea {
     border-right: 0px;
 }
 
-button, .button {
-    cursor: pointer;
-}
-
 button {
+    cursor: pointer;
     margin-top: 0px;
     margin-bottom: 0px;
+    background-color: inherit;
+    border: 1px solid black;
+    padding: 5px;
 }
 
 .padding {
@@ -151,16 +151,6 @@ a[href] {
     height: 100%;
 }
 
-:is(button, .button):not(:last-child) {
-    margin-right: 5px;
-}
-
-button {
-    background-color: inherit;
-    border: 1px solid black;
-    padding: 5px;
-}
-
 .slash {
     color: #aaaaaa;
 }
@@ -216,4 +206,14 @@ button {
 
 .buttons > div {
     margin-bottom: -4px;
+}
+
+.gap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.gap > * {
+    align-self: stretch;
 }

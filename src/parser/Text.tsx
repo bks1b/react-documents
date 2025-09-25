@@ -38,9 +38,9 @@ export const Text = (props: { text: string; table?: boolean; } & TextOptions) =>
     }
     return isList
         ? <ul style={{
-            margin: '0px',
+            margin: 0,
             listStylePosition: props.table ? 'outside' : 'unset',
             paddingLeft: 15 + (props.table ? 10 : 20) * (listLevel + 1),
         }}><li>{arr}</li></ul>
-        : <div style={{ margin: '2px 0px' }}>{arr}</div>;
+        : <div style={{ margin: '2px 0' }}>{arr}</div>;
 };

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Dir } from '../types';
 
 export enum Actions {
@@ -50,6 +50,7 @@ export type Config = {
     Renderer: FC<Record<'name' | 'text', string>>;
     heightOffset?: string;
     rootElement: HTMLElement;
+    button?: ReactNode;
 };
 
 export type RequestFunction = <T>(path: string, body?: any) => Promise<T & { error?: string; }>;

@@ -8,7 +8,7 @@ const Renderer = (props: { name: string; text: string; }) => {
     return <>
         <div className='tabs'>
             {[0, 1].map(x => <div key={x} onClick={() => setTab(x)} className={tab === x ? 'selectedTab' : ''}>
-                <h1 style={{ margin: '0px', fontWeight: '400' }}>Tab {x + 1}</h1>
+                <h1 style={{ margin: 0, fontWeight: 400 }}>Tab {x + 1}</h1>
             </div>)}
         </div>
         <div className='tabContent'>

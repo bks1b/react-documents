@@ -20,7 +20,7 @@ export default class Folder extends BaseFile<Dir, { root?: boolean; }> {
                                 ? ''
                                 : <Triangle angle={this.props.data.open ? 2 : 1} fill/>
                         }
-                        <a className='fileName' style={{ marginLeft: '3px' }}>{this.props.data.name}</a>
+                        <a className='fileName' style={{ marginLeft: 3 }}>{this.props.data.name}</a>
                     </div>
                     {
                         this.props.dashboard && <div className='buttons'>

@@ -12,4 +12,11 @@ const Renderer = (props: { name: string; text: string; }) => <>
 
 const root = document.getElementById('root')!;
 
-createRoot(root).render(<Documents title='Test' Renderer={Renderer} rootPath={['docs']} padding rootElement={root}/>);
+createRoot(root).render(<Documents
+    title='Test'
+    Renderer={Renderer}
+    rootPath={['docs']}
+    padding
+    rootElement={root}
+    button={<button onClick={() => location.href = '/'}>Home</button>}/>,
+);
