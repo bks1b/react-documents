@@ -7,6 +7,7 @@ export const ConfigContext = createContext<{
     title: string;
     rootPath: string;
     heightOffset?: string;
+    singleBranch?: boolean;
     getButtons: (name?: string, child?: ReactNode) => ReactNode;
     render: (name: string, text: string) => ReactNode;
 } | null>(null);

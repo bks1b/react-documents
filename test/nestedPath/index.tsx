@@ -17,6 +17,7 @@ createRoot(root).render(<Documents
     Renderer={Renderer}
     rootPath={['docs']}
     padding
+    singleBranch
     rootElement={root}
     button={<button onClick={() => location.href = '/'}>Home</button>}/>,
 );

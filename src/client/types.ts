@@ -46,11 +46,12 @@ export type MainContextType = {
 export type Config = {
     title: string;
     rootPath?: string[];
-    padding?: boolean;
-    Renderer: FC<Record<'name' | 'text', string>>;
     heightOffset?: string;
-    rootElement: HTMLElement;
+    singleBranch?: boolean;
     button?: ReactNode;
+    Renderer: FC<Record<'name' | 'text', string>>;
+    padding?: boolean;
+    rootElement: HTMLElement;
 };
 
 export type RequestFunction = <T>(path: string, body?: any) => Promise<T & { error?: string; }>;

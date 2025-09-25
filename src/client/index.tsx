@@ -73,7 +73,7 @@ export const Documents = (config: Config) => {
             }, INCORRECT_PASS_TIMEOUT);
         } else {
             setAuthType(AuthType.USER);
-            request<Dir>('files').then(initFiles);
+            request<Dir>('files/' + (config.singleBranch ? 'dev' : 'main')).then(initFiles);
         }
     }, [loggedIn]);
 
@@ -125,6 +125,7 @@ export const Documents = (config: Config) => {
             title: config.title,
             heightOffset: config.heightOffset,
             rootPath,
+            singleBranch: config.singleBranch,
             getButtons: (name, child) => <div className='gap'>
                 {name ? <Link path={[]}>{'Vissza a ' + name}</Link> : ''}
                 {child || ''}
