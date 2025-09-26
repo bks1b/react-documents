@@ -19,7 +19,7 @@ export default class<T extends BaseFile, U = {}> extends Component<{
 
     promptName(title: string, val: string, cb: (name: string) => any) {
         return () => {
-            const name = prompt(title, val);
+            const name = prompt(title, val)?.trim();
             if (name) cb(name);
         };
     }

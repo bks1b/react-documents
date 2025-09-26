@@ -31,6 +31,7 @@ export default (requestDashboard: RequestFunction) => (oldState: DirState, { typ
             if (target.name !== payload && hasDuplicate(<Dir>traverseSearch(state.data!, path!.slice(0, -1))![0], payload)) return state;
             target.name = payload;
             target.path.splice(-1, 1, payload);
+            if (!('text' in target)) updatePaths(<Dir>target, target.path, target.path.length);
             break;
         case Actions.MOVE:
             parent.splice(index + payload, 0, ...parent.splice(index, 1));
