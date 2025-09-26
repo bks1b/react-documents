@@ -10,6 +10,11 @@ export const Text = (props: { text: string; table?: boolean; } & TextOptions) =>
     const isList = props.text.trim().startsWith(listChar);
     for (let i = isList ? listLevel + listChar.length : 0; i < props.text.length;) {
         const sub = props.text.slice(i);
+        if (sub[0] === '\\' && sub[1]) {
+            arr.push(sub[1]);
+            i += 2;
+            continue;
+        }
         const ext = props.extended?.(sub);
         if (ext) {
             arr.push(<Fragment key={i}>{ext[0]}</Fragment>);
@@ -32,8 +37,8 @@ export const Text = (props: { text: string; table?: boolean; } & TextOptions) =>
             i += hyperlink[0].length;
             continue;
         }
-        if (typeof arr.slice(-1)[0] === 'string') arr.splice(-1, 1, arr.slice(-1)[0] + props.text[i]);
-        else arr.push(props.text[i]);
+        if (typeof arr.slice(-1)[0] === 'string') arr.splice(-1, 1, arr.slice(-1)[0] + sub[0]);
+        else arr.push(sub[0]);
         i++;
     }
     return isList

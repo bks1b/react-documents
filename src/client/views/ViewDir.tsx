@@ -9,7 +9,7 @@ export default ({ dir }: { dir: Dir; }) => {
     setTitle(dir.name);
     dir.open = true;
     return <div className='padding'>
-        <div className='h3'>{['Főoldal', ...dir.path].map((x, i) => <Fragment key={i}><a className='slash'>/</a><Link path={dir.path.slice(0, i)} text>{x}</Link></Fragment>)}</div>
+        <div className='h3'>{['Főoldal', ...dir.path].map((x, i) => <Fragment key={i}>/<Link path={dir.path.slice(0, i)} text>{x}</Link></Fragment>)}</div>
         <div className='folderContainer'>
             <Folder data={traverseSearch(ctx.state.data!, dir.path)![0] as Dir} index={[0, 1]}/>
         </div>
